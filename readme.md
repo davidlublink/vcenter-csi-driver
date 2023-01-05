@@ -10,7 +10,6 @@ https://github.com/kubernetes-sigs/vsphere-csi-driver/issues/542
 
 This plugin has been tested and developed on Nomad, however it is compatible with the CSI specification so it should also be functional with other clusters. 
 
-
 # CSI and Figure 8
 
 CSI : https://github.com/container-storage-interface/spec/blob/master/spec.md
@@ -155,6 +154,24 @@ This unregisters with nomad, but will not delete the volume in vstorage
 ```
 nomad volume deregister volume-235[0]
 ```
+
+
+# Building
+
+Checkout a copy of this repository and run docker build
+
+
+```
+docker build .
+```
+
+
+# Contributing
+
+Testing, troubleshooting, contributing code, etc... All help is welcome!
+
+The next big step is to integrate automated testing
+
 
 # Caveats
 
