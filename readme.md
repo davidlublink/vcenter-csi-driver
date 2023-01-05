@@ -183,7 +183,15 @@ Nomad jobs are easily managed via nomad web interface, but volumes can only be c
 
 Garbage collection is non existant since this plugin is stateless, the plugin relies on the cluster to handle it. If anything goes wrong on the cluster or in the plugin, you will have rogue disks connected to your clients
 
-## Cannot open the disk '/vmfs/volumes/some-uuid/fcd/somedisk.vmdk' or one of the snapshot disks it depends on
+
+## Overconnected disk
+
+```
+Cannot open the disk '/vmfs/volumes/some-uuid/fcd/somedisk.vmdk' or one of the snapshot disks it depends on
+```
+
+This can happen if the plugin is not called to disconnect a disk after it was used. Be sure that the plugin is only ever stopped when all volumes in use are stopped. The plugin, being stateless, can be restarted as long as no changes happen to any of your jobs while it's being restarted. IE if all other jobs are healthy and are not changed, you can restart the plugin as much as you want. 
+
 
 This happens when we try to connect the same disk to two virtual machines. Maybe the disk is still in use on a previous machine 
 
