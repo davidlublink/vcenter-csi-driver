@@ -85,13 +85,12 @@ VMWARE_DATASTORE="mystore"
 * Functional Nomad Cluster
 * * Vault ( optional / recommended )
 
-## Deploy the job
+## Deploy the CSI plugin
 
 1. Setup your variables in your job csi-nomad-plugin.hcl
 2. Run the job
 
 ```
-nomad plan csi-nomad-plugin.hcl
 nomad run csi-nomad-plugin.hcl
 ```
 
@@ -99,7 +98,7 @@ Once your job is healthy, the plugin should appear in storage plugins tab.
 
 It takes 1-2 minutes for the plugin to be healthy AFTER your job is healthy. So if you create a volume to quickly it might say creation is not supported.
 
-## Add a new volume
+## Create a volume
 
 1. Setup your variables in csi-volume-demo.hcl
 2. Create the volume
@@ -109,6 +108,8 @@ nomad volume create csi-volume-demo.hcl
 ```
 
 Note that any volume you add must end with the index number. eg, the volume volume-235 would be set as volume-235 in this file. If you want to have multiple volumes with the same name, just recreate the volume and increment each time ( volume-235[0], volume-235[1], volume-235[2] etc...). In your nomad job, you do not specify the index. If unsure just put [0] ( ie volume-235[0]).
+
+You should see the volume appear in vcenter when this is completed
 
 ## Use your storage
 
@@ -135,7 +136,18 @@ nomad stop vcenter-csi-demo
 nomad volume delete volume-235[0]
 ```
 
-* This was broken when I tested
+## Remove CSI Plugin
+
+1. Stop the job
+
+```
+nomad stop csi-nomad-plugin
+```
+
+Plugin seems to stay registered but unhealthy after you remove it, nomad gc doesn't seem to help
+
+
+
 
 ## Unregister your storage
 
