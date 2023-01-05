@@ -167,9 +167,14 @@ Nomad jobs are easily managed via nomad web interface, but volumes can only be c
 
 # Troubleshooting
 
-When troubleshooting, run the plugin as a type=service instead of a type=system. Open the stderr console for the plugin and watch it as you run the action you are troubleshooting. When creating a volume, the plugin connects to your vcenter and will create the volume. Bad permissions and misconfigurations on your vmware can interfere. Testing creation of a volume is a good sanity test as it requires a functional setup to connect to the disk and format it.
 
-Be careful with volume name, any CSI related commands ( create,delete volume ) will have an index ( ie volume-235[0] ), but the nomad jobs will not ( ie volume-235 ).
+* Run plugin in type=service instead of type=system mode
+    * You can't change service types so create the job with a different name and stop the service
+* Watch stderr of the plugin, it will tell you what is happening 99% of the time something fails.
+
+Testing creation of a volume is a good sanity test as it requires a functional setup to connect to the disk and format it.
+
+Be careful with volume name, any CSI related commands ( create, delete volume ) will have an index ( ie volume-235[0] ), but the nomad jobs will not ( ie volume-235 ).
 
 If you are stuck, please use the issue tracker to log any issues you find.
 
