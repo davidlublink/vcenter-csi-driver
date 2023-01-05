@@ -78,11 +78,11 @@ VMWARE_DATASTORE="mystore"
 # Pre-requisites
 
 * Vmware vcenter configured ( with API 6.7 or better )
-- At least 1 SAN connected to the same VMware vcenter
-- User/password with appropriate access to the cluster
-- IPs/Hostnames of vCenter
+    * At least 1 SAN connected to the same VMware vcenter
+    * User/password with appropriate access to the cluster
+    * IPs/Hostnames of vCenter
 * Functional Nomad Cluster
-- At least 1 nomad client that is running inside a Vmware virtual machine
+    * At least 1 nomad client that is running inside a Vmware virtual machine
 
 ## Deploy the CSI plugin
 
