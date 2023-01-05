@@ -181,6 +181,8 @@ After 4-5 disks on a single vm in nomad, linux seems to stop detecting disks add
 
 Nomad jobs are easily managed via nomad web interface, but volumes can only be created/removed from the API
 
+Garbage collection is non existant since this plugin is stateless, the plugin relies on the cluster to handle it. If anything goes wrong on the cluster or in the plugin, you will have rogue disks connected to your clients
+
 
 # Troubleshooting
 
