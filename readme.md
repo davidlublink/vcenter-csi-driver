@@ -49,12 +49,6 @@ VMWARE_DATASTORE="mystore"
 ```
 
 
-# Opening tickets
-
-Please use the issue tracker to log any issues you find.
-
-Include your Nomad Jobs, volume definitions and any output from any of the daemons.
-
 # Estimated time to configure
 
 20 Minutes
@@ -64,17 +58,91 @@ Skill Level : Intermediate
 
 # Pre-requisites
 
-* VmWare VCenter configured ( with API 6.7 or better )
-* * VCenter controls 1 or more virtual machines that contain a nomad-client
-* * VCenter controls 1 or more SANs ( virtual or otherwises ) with datastores
+* Vmware vcenter configured ( with API 6.7 or better )
+* * At least 1 nomad client that is running inside a Vmware virtual machine
+* * At least 1 SAN connected to the same VMware vcenter
 * User/password with appropriate access to the cluster
 * IPs/Hostnames of vCenter
 * Functional Nomad Cluster
 * * Vault ( optional / recommended )
 
-# Quick guide
-* Deploy two included nomad jobs and generate a volume using the included volume sample.
+## Deploy the job
+
+1. Setup your variables in your job csi-nomad-plugin.hcl
+2. Run the job
+
+```
+nomad plan csi-nomad-plugin.hcl
+nomad run csi-nomad-plugin.hcl
+```
+
+Once your job is healthy, the plugin should appear in storage plugins tab.
+
+It takes 1-2 minutes for the plugin to be healthy AFTER your job is healthy. So if you create a volume to quickly it might say creation is not supported.
+
+## Add a new volume
+
+1. Setup your variables in csi-volume-demo.hcl
+2. Create the volume
+
+```
+nomad volume create csi-volume-demo.hcl
+```
+
+Note that any volume you add must end with the index number. eg, the volume volume-235 would be set as volume-235 in this file. If you want to have multiple volumes with the same name, just recreate the volume and increment each time ( volume-235[0], volume-235[1], volume-235[2] etc...). In your nomad job, you do not specify the index. If unsure just put [0] ( ie volume-235[0]).
+
+## Use your storage
+
+1. Setup your variables in csi-nomad-demo.hcl
+2. Create your job
+
+```
+nomad run csi-nomad-demo.hcl
+```
+
+## Stop using your storage
+
+1. Stop the job
+
+```
+nomad stop vcenter-csi-demo
+```
+
+## Delete your storage
+
+1. Delete the volume
+
+```
+nomad volume delete volume-235[0]
+```
+
+* This was broken when I tested
+
+## Unregister your storage
+
+This unregisters with nomad, but will not delete the volume in vstorage
+
+```
+nomad volume deregister volume-235[0]
+```
+
+# Caveats
+
+This job does not descriminate the nomad clients and if you run the plugin on a client that is not a vmware client, it is likely to simply crash with exotic error messages ( unable to identify virtual machine !).
 
 
-# About Cloudli
-Experts in Vmware, voice automation, etc....
+# Troubleshooting
+
+When troubleshooting, run the plugin as a type=service instead of a type=system. Open the stderr console for the plugin and watch it as you run the action you are troubleshooting. When creating a volume, the plugin connects to your vcenter and will create the volume. Bad permissions and misconfigurations on your vmware can interfere. Testing creation of a volume is a good sanity test as it requires a functional setup to connect to the disk and format it.
+
+Be careful with volume name, any CSI related commands ( create,delete volume ) will have an index ( ie volume-235[0] ), but the nomad jobs will not ( ie volume-235 ).
+
+If you are stuck, please use the issue tracker to log any issues you find.
+
+Include your Nomad Jobs, volume definitions, logs and any output from any of the daemons.
+
+
+
+
+
+
