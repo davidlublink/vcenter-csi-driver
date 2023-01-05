@@ -19,7 +19,7 @@
 
         config {
           privileged = true
-          image = "davidlublink/socketserver:latest"
+          image = "davidlublink/vcenter-csi-driver:latest"
         }
         env {
           #GRPC_VERBOSITY="debug"
