@@ -1,7 +1,3 @@
-# vcenter-csi-driver
-
-State of the project proof of concept with active interest in getting it done.
-
 # Introduction
 
 This CSI plugin allows you to setup your Nomad cluster so that Nomad clients that are on VMWare hosted virtual machines can use your vcenter connected SAN disks as storage. This plugin will connect the vmdk from your SAN to the server with iSCSI. This is accomplished by using the vmware library pyvmomi to connect to the vCenter and setup disks.
@@ -13,6 +9,36 @@ This repository is in direct response to this issue :
 https://github.com/kubernetes-sigs/vsphere-csi-driver/issues/542
 
 This plugin has been tested and developed on Nomad, however it is compatible with the CSI specification so it should also be functional with other clusters. 
+
+
+# CSI and Figure 8
+
+CSI : https://github.com/container-storage-interface/spec/blob/master/spec.md
+
+In figure 8 : 
+
+```
+       +-+  +-+
+       |X|  | |
+       +++  +^+
+        |    |
+   Node |    | Node
+Publish |    | Unpublish
+ Volume |    | Volume
+    +---v----+---+
+    | PUBLISHED  |
+    +------------+
+
+Figure 8: Plugins MAY forego other lifecycle steps by contraindicating
+them via the capabilities API. Interactions with the volumes of such
+plugins is reduced to `NodePublishVolume` and `NodeUnpublishVolume`
+calls.
+
+```
+
+This plugin is based on the minimal set with partially implemented create/delete volumes.
+
+
 
 # Environment variables
 
@@ -47,13 +73,6 @@ VMWARE_PASSWORD="password"
 VMWARE_FOLDER="fcd/"
 VMWARE_DATASTORE="mystore"
 ```
-
-
-# Estimated time to configure
-
-20 Minutes
-
-Skill Level : Intermediate 
 
 
 # Pre-requisites
@@ -129,6 +148,10 @@ nomad volume deregister volume-235[0]
 # Caveats
 
 This job does not descriminate the nomad clients and if you run the plugin on a client that is not a vmware client, it is likely to simply crash with exotic error messages ( unable to identify virtual machine !).
+
+After 4-5 disks on a single vm in nomad, linux seems to stop detecting disks added by vmware. I don't know if this is a bug with csi, nomad or vmware.
+
+Nomad jobs are easily managed via nomad web interface, but volumes can only be created/removed from the API
 
 
 # Troubleshooting

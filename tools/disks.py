@@ -40,6 +40,8 @@ def applyChanges( changes ):
 
 # Everything after this line is mostly lifted from sample code / google        
 
+# https://github.com/vmware/pyvmomi-community-samples/blob/master/samples/fcd_attach_vdisk_to_vm.py
+
 def search_for_obj(content, vim_type, name, folder=None, recurse=True):
     """
     Search the managed object for the name and type specified
