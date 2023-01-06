@@ -268,7 +268,7 @@ Testing, troubleshooting, contributing code, etc... All help is welcome!
 
 The next big step is to integrate automated testing
 
-IF you test this driver, I please open an issue and included any information you can about your test scenario ( even if everything succeeded ).
+If you test this driver, please open an issue in GitHub and included any information you can about your test scenario ( even if everything succeeded ). In the description line add '[Test Results]'. 
 
 If you run into any issues, please open an issue and include whatever information you have available.
 
