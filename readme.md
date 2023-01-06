@@ -221,11 +221,7 @@ Nomad finishes cleaning up and may do other work. Generally the volumes are remo
 
 All of this happens transparently when you 'nomad stop job-that-had-a-csi-based-volume'.
 
-# Contributing
 
-Testing, troubleshooting, contributing code, etc... All help is welcome!
-
-The next big step is to integrate automated testing
 
 
 # Caveats
@@ -263,6 +259,18 @@ Be careful with volume name, any CSI related commands ( create, delete volume ) 
 If you are stuck, please use the issue tracker to log any issues you find.
 
 Include your Nomad Jobs, volume definitions, logs and any output from any of the daemons.
+
+
+
+# Contributing
+
+Testing, troubleshooting, contributing code, etc... All help is welcome!
+
+The next big step is to integrate automated testing
+
+IF you test this driver, I please open an issue and included any information you can about your test scenario ( even if everything succeeded ).
+
+If you run into any issues, please open an issue and include whatever information you have available.
 
 
 
