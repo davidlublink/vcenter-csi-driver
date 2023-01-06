@@ -165,6 +165,61 @@ Checkout a copy of this repository and run docker build
 docker build .
 ```
 
+# Life cycles
+
+Under the hood it's python. I used the code generator gRPC with the official spec for CSI. Nomad and Vmware do most of the work. Here are the 4 implemented methods:
+
+## Create a volume
+
+When Nomad receives a volume creation command, CSI invokes the plugin. The plugin does the following :
+
+1. Finds the virtual machine object that represents itself in vCenter ( assumes hostname is the same as vm name in vcenter )
+2. Finds the identified datastore
+3. Find if a file with the same name already exists, if it does, abort and use it
+4. Creates a new volume ( vmdk ) in vcenter
+5. The volume is then attached to the vm running the plugin ( it appears as /dev/sdX )
+6. The volume is formatted ( ie mkfs.ext4 /dev/sdX )
+7. The volume is detached from the vm and is now waiting and ready.
+8. Plugin goes back to sleep
+
+All of this happens transparently when you run 'nomad volume create foo.hcl'. 
+
+There is no control over which filesystem is used for formatting, it's always ext4. At this point the volume is now mounted and ready to go. As a side effect of this process you'll notice every volume the plugin creates has a 'lost+found' folder as it is an ext4 file system.
+
+## Publishing a volume
+
+Now that you have a volume that is ready to go, Nomad has to use it. When nomad allocates a job that requires a volume provided by CSI, it'll only allocate to clients with a healthy csi plugin. During the allocation steps, Nomad will call our plugin which will do the following steps : 
+
+1. Finds the virtual machine object that represents itself in vCenter ( assumes hostname is the same as vm name in vcenter )
+2. Finds the provided datastore
+3. Find volume ( vmdk ) with the correct name in the identified datastore, if file not found hard crash
+5. The volume is then attached to the vm running the plugin ( it will appear as /dev/sdX )
+6. The volume is mounted to the location CSI provides ( usually a VERY long file system path ) 
+7. Plugin goes back to sleep
+
+At this point the volume is now mounted and ready to go. As a side effect of this process you'll notice every volume the plugin creates has a 'lost+found' folder as it is an ext4 file system.
+
+Once attached the plugin has nothing more to do, vcenter will have added the volume to the nomad client's iSCSI and so everything else is high performance access to the iSCSI.
+
+At this point Nomad can continue it's allocation and will download the image ( if it's docker ) and start the job. The driver is idle again.
+
+All of this happens transparently when you 'nomad run job-that-has-a-csi-based-volume.hcl'.
+
+## Unpublishing a volume
+
+When a job ends ( cleanly or not ) we have to detach the volume from the nomad client's iSCSI.
+
+During Nomad's cleanup cycle, near the end, it invokes the CSI plugin indicating the volume is ready to be unmounted. At this point the driver does the following : 
+
+1. Calls umount
+2. Sends API request to vmware to detach the disk from the nomad client's iSCSI
+3. Volume is back free to be used in your SAN with no iSCSI connections
+4. Plugin goes back to sleep
+
+Nomad finishes cleaning up and may do other work. Generally the volumes are removed at the very end of the Nomad cleanup cycle.
+
+
+All of this happens transparently when you 'nomad stop job-that-had-a-csi-based-volume'.
 
 # Contributing
 
