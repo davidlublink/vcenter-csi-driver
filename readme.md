@@ -175,13 +175,11 @@ The next big step is to integrate automated testing
 
 # Caveats
 
-This job does not descriminate the nomad clients and if you run the plugin on a client that is not a vmware client, it is likely to simply crash with exotic error messages ( unable to identify virtual machine !).
-
-After 4-5 disks on a single vm in nomad, linux seems to stop detecting disks added by vmware. I don't know if this is a bug with csi, nomad or vmware.
+This job does not detect that a nomad client is running on a vmware vm, if you run the plugin on a client that is not a vmware client, it is likely to simply crash with unexpected messages (like unable to identify virtual machine !).
 
 Nomad jobs are easily managed via nomad web interface, but volumes can only be created/removed from the API
 
-Garbage collection is non existant since this plugin is stateless, the plugin relies on the cluster to handle it. If anything goes wrong on the cluster or in the plugin, you will have rogue disks connected to your clients
+Garbage collection relies on the cluster to handle it. If anything goes wrong on the cluster or in the plugin, you will have rogue disks connected to your clients.
 
 
 ## Overconnected disk
