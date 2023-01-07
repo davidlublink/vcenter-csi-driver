@@ -64,11 +64,14 @@ INSECURE_CERTIFICATE=1
 Enter your vmcenter credentials here
 
 ```
-VMWARE_HOSTNAME="127.0.0.1"
+# Name in vmware vcenter
+VMWARE_HOSTNAME=node.unique.name
 
 VMWARE_USERNAME="alice"
 VMWARE_PASSWORD="password"
 
+#Host with the vmware ip, usually it's where you login to vcenter
+VMWARE_HOST="192.168.11.1"
 VMWARE_FOLDER="fcd/"
 VMWARE_DATASTORE="mystore"
 ```
