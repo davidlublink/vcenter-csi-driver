@@ -276,6 +276,14 @@ If you test this driver, please open an issue in GitHub and included any informa
 If you run into any issues, please open an issue and include whatever information you have available.
 
 
+# Test Results
+
+This plugin has been tested with Nomad 1.4.3 and vcenter v.7. Testing is still ongoing.
+
+# Upcoming Features / BugFixes
+* Volume creation filenames is garbage ( fcd/hash.vmdk )
+* Add notes to readme about adding an existing volume
+* Add full disk encryption
 
 
 
