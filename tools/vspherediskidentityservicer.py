@@ -31,6 +31,8 @@ class VSphereDiskIdentityServicer(csi_pb2_grpc.IdentityServicer):
         return tmp
     def Probe(self,request,context):
         eprint('IdentityService.Probe')
+        obj = tools.diskmanager.DiskManager()
+        obj.ping()
         return csi_pb2.ProbeResponse()
 
 

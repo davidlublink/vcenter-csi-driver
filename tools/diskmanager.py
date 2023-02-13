@@ -58,7 +58,12 @@ class DiskManager():
 
         eprint("Reading hostname")
         self.hostname = os.getenv('VMWARE_HOSTNAME', socket.gethostname() )
-    
+    def ping(self):
+        eprint("About to ping the vmsphere server");
+        eprint(self.hostname)
+        get_obj( self.content, [vim.VirtualMachine], self.hostname)
+
+
     def createDisk(self, folder, name, size ):
         eprint("Create Disk")
         eprint(self.hostname)
