@@ -28,33 +28,23 @@ class VSphereDiskControllerServicer(csi_pb2_grpc.ControllerServicer):
         tmp2 = csi_pb2.ControllerServiceCapability(rpc=tmp3)
         tmp.capabilities.append(tmp2)
 
-        eprint(tmp)
-
         return tmp
     def ListVolumes(self,request,context):
         eprint('ControllerServicer.ListVolumes')
         tmp = csi_pb2.ListVolumesResponse()
-        #eprint(tmp)
         return tmp
 
     def ControllerPublishVolume(self,request,context):
-
-        eprint('ControllerServicer.ControllerPublishVolume')
         tmp = csi_pb2.ControllerPublishVolumeResponse() 
-        eprint(request)
-        eprint(context)
         return tmp
 
         
     def ControllerUnpublishVolume(self,request,context):
-
-        eprint('ControllerServicer.ControllerUnpublishVolume')
         tmp = csi_pb2.ControllerUnpublishVolumeResponse() 
-        eprint(request)
-        eprint(context)
         return tmp
 
     def CreateVolume(self, request, context):
+        eprint("Received volume create command!");
         eprint(request)
         size=request.capacity_range.limit_bytes
         eprint(size)
@@ -68,10 +58,8 @@ class VSphereDiskControllerServicer(csi_pb2_grpc.ControllerServicer):
         return r
     def DeleteVolume(self, request, context):
         
-        eprint('DeleteVolume')
+        eprint('Received DeleteVolume')
         eprint(request.name)
-        eprint("YOLO!")
-        eprint(request)
         r = csi_pb2.DeleteVolumeResponse()
         
         obj = tools.diskmanager.DiskManager()

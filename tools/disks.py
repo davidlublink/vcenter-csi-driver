@@ -19,10 +19,10 @@ def eprint(*args, **kwargs):
     pp.pprint(*args, **kwargs)
 
 def applyChanges( changes ):
-    eprint( "applyChanges : Running " + changes )
+    eprint( "Running " + changes )
     
     if os.getenv('PRODUCTION') == "YES!" :
-        eprint("apply production change ahhhh!")
+        eprint("On production")
         eprint(changes)
         result = subprocess.run(changes, shell=True, capture_output=True)
         eprint(result.stdout.decode())
@@ -108,7 +108,7 @@ def create_disk( service_instance, content, vmware_folder, storage, datastore, n
     disk = find_disk(content,storage,datastore,name)
     
     if ( disk != None ):
-        eprint( "Found a disk!!!" )
+        eprint( "Found an existing disk with the same identity, returning it instead!!!" )
         return disk
 
     spec = vim.vslm.CreateSpec()
@@ -208,7 +208,7 @@ def add_fcd_to_vm(vm, vdisk, datastore):
     eprint("wait for kernel to finish scanning")
     time.sleep(1)
 
-    eprint("Disk has been added, let's look at our mounts")
+    eprint("Disk has been added to virtual host, let's look at our mounts")
     eprint(socket.gethostname())
 
     mounts = []
@@ -231,7 +231,13 @@ def umount_fcd( disk ):
 
 def mount_fcd( disk, target ):
     os.mkdir( target )
-    applyChanges("mount " + disk + " " + target)
+
+    result = applyChanges("mount " + disk + " " + target)
+
+
+    if result.returncode != 0:
+         raise Exception( result.stderr.decode() );
+
 
 def remove_fcd_from_vm(vm, vdisk, datastore):
     """

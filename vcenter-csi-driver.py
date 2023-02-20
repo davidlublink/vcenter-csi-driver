@@ -32,7 +32,7 @@ if __name__ == '__main__':
     
     eprint(os.environ.get('CSI_ENDPOINT','unix:csi.sock' ))
     
-    monolith = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    monolith = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
 
     # Add identity service - common services between Node and service 
     csi_pb2_grpc.add_IdentityServicer_to_server( tools.vspherediskidentityservicer.VSphereDiskIdentityServicer(), monolith )

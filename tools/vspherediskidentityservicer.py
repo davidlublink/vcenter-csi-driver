@@ -18,7 +18,6 @@ class VSphereDiskIdentityServicer(csi_pb2_grpc.IdentityServicer):
         obj = csi_pb2.GetPluginInfoResponse()
         obj.name='cloudli_vmware'
         obj.vendor_version='1'
-        #eprint(obj)
         return obj
     def GetPluginCapabilities(self, request, context):
         eprint('IdentityService.GetPluginCapabilities')
@@ -27,7 +26,6 @@ class VSphereDiskIdentityServicer(csi_pb2_grpc.IdentityServicer):
         tmp3=csi_pb2.PluginCapability.Service(type=1)
         tmp2=csi_pb2.PluginCapability(service=tmp3)
         tmp.capabilities.append(tmp2)
-        #eprint(tmp)
         return tmp
     def Probe(self,request,context):
         eprint('IdentityService.Probe')

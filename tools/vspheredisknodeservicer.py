@@ -38,11 +38,6 @@ class VSphereDiskNodeServicer(csi_pb2_grpc.NodeServicer):
         tmp = csi_pb2.NodeGetCapabilitiesResponse()
 
         eprint("NodeServicer.NodeGetCapabilities")
-        #tmp3 = csi_pb2.NodeServiceCapability.RPC(type=1)
-        #tmp2 = csi_pb2.NodeServiceCapability(rpc=tmp3)
-        #tmp.capabilities.append(tmp2)
-
-        #eprint(tmp)
 
         return tmp
         
